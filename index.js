@@ -14,7 +14,10 @@ console.log(some)
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-require('./routes/index')(app)
+// require('./routes/index')(app)
+require('./routes/adoptions.js')(app)
+require('./routes/founddogs.js')(app)
+require('./routes/tinder.js')(app)
 
 
 app.listen(port, ()=>{
