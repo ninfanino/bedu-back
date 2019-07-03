@@ -3,6 +3,25 @@ let ObjectId = require('mongodb').ObjectId;
 let url = "mongodb+srv://admin:admin@cluster0-ytsob.mongodb.net/test?retryWrites=true&w=majority"
 
 module.exports = (app) => {
+
+  app.post('/login', (req,res) => {
+    MongoClient.connect(url, function(err, db) {
+      if (err) throw err;
+      var dbo = db.db("xuxo");
+      var query = { name: req.body.user, password: req.body.pass };
+      dbo.collection("Users").findOne(query, function(err, result) {
+        if (err) throw err;
+        if(result === null){
+          res.status(200).send('El Usuario o el Password son incorrectos')
+        }
+        else{
+          res.status(200).send('ALL OK')
+        }
+        db.close();
+      });
+    });
+  });
+  
     app.get('/users', (req, res)=>{
         MongoClient.connect(url, { useNewUrlParser: true }, (err, db) =>{
             if (err) throw err;
