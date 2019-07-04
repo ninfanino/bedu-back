@@ -12,10 +12,10 @@ module.exports = (app) => {
       dbo.collection("Users").findOne(query, function(err, result) {
         if (err) throw err;
         if(result === null){
-          res.status(200).send('El Usuario o el Password son incorrectos')
+          res.status(200).send({message: 'El Usuario o el Password son incorrectos'})
         }
         else{
-          res.status(200).send('ALL OK')
+          res.status(200).send({message: 'ALL OK'})
         }
         db.close();
       });
