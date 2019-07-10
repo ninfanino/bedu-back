@@ -20,8 +20,22 @@ module.exports = (app) => {
             if (err) throw err;
             var dbo = db.db("xuxo");
             var myobj = { 
-                            dogname: req.body.dogname,
-                            race: req.body.race 
+                            petname: req.body.PetName,
+                            owner: req.body.owner,
+                            age: req.body.age, 
+                            kind: req.body.kind,
+                            race: req.body.race,
+                            gender: req.body.gender,
+                            // photo1: req.body.photo1,
+                            // photo2: req.body.photo2,
+                            certificate: req.body.certificate,
+                            emergency: req.body.emergency,
+                            inadoption: req.body.inadoption,
+                            lost: req.body.lost,
+                            found: req.body.found,
+                            inlove: req.body.inlove,
+                            contactphone: req.body.contactphone
+                            
                         };
             dbo.collection("Pets").insertOne(myobj, (err, res) => {
               if (err) throw err;
@@ -33,12 +47,29 @@ module.exports = (app) => {
           res.send({msg:"All ok"})
     })
     
-    app.put('/dogs', (req,res)=>{
+    app.put('/pets', (req,res)=>{
         MongoClient.connect(url, { useNewUrlParser: true } , function(err, db) {
             if (err) throw err;
             var dbo = db.db("xuxo");
             var myquery = { _id : ObjectId(req.body.id)};
-            var newvalues = { $set: {dogname: req.body.dogname, race: req.body.race } };
+            var newvalues = { $set: { 
+              petname: req.body.PetName,
+              owner: req.body.owner,
+              age: req.body.age, 
+              kind: req.body.kind,
+              race: req.body.race,
+              gender: req.body.gender,
+              photo1: req.body.photo1,
+              photo2: req.body.photo2,
+              certificate: req.body.certificate,
+              emergency: req.body.emergency,
+              inadoption: req.body.inadoption,
+              lost: req.body.lost,
+              found: req.body.found,
+              inlove: req.body.inlove,
+              contactphone: req.body.contactphone
+              
+          } };
             dbo.collection("Pets").updateOne(myquery, newvalues, function(err, res) {
               if (err) throw err;
               console.log("1 document updated");
