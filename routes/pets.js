@@ -3,11 +3,11 @@ let ObjectId = require('mongodb').ObjectId;
 let url = "mongodb+srv://admin:admin@cluster0-ytsob.mongodb.net/test?retryWrites=true&w=majority"
 
 module.exports = (app) => {
-    app.get('/dogs', (req, res)=>{
+    app.get('/pets', (req, res)=>{
         MongoClient.connect(url, { useNewUrlParser: true }, (err, db) =>{
             if (err) throw err;
             var dbo = db.db("xuxo");
-            dbo.collection("Dogs").find({}).toArray(function(err, result) {
+            dbo.collection("Pets").find({}).toArray(function(err, result) {
               if (err) throw err;
                res.send(result)
               db.close();
@@ -15,7 +15,7 @@ module.exports = (app) => {
           });
     })
     
-    app.post('/dogs', (req, res) => {
+    app.post('/pets', (req, res) => {
         MongoClient.connect(url, { useNewUrlParser: true }, (err, db) => {
             if (err) throw err;
             var dbo = db.db("xuxo");
@@ -23,7 +23,7 @@ module.exports = (app) => {
                             dogname: req.body.dogname,
                             race: req.body.race 
                         };
-            dbo.collection("Dogs").insertOne(myobj, (err, res) => {
+            dbo.collection("Pets").insertOne(myobj, (err, res) => {
               if (err) throw err;
               console.log("1 document inserted");
              
@@ -39,7 +39,7 @@ module.exports = (app) => {
             var dbo = db.db("xuxo");
             var myquery = { _id : ObjectId(req.body.id)};
             var newvalues = { $set: {dogname: req.body.dogname, race: req.body.race } };
-            dbo.collection("Dogs").updateOne(myquery, newvalues, function(err, res) {
+            dbo.collection("Pets").updateOne(myquery, newvalues, function(err, res) {
               if (err) throw err;
               console.log("1 document updated");
               db.close();
@@ -54,7 +54,7 @@ module.exports = (app) => {
             if (err) throw err;
             var dbo = db.db("xuxo");
             var myquery = { _id : ObjectId(req.body.id) };
-            dbo.collection("Dogs").deleteOne(myquery, function(err, obj) {
+            dbo.collection("Pets").deleteOne(myquery, function(err, obj) {
               if (err) throw err;
               console.log("1 document deleted");
               db.close();

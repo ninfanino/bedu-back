@@ -18,9 +18,9 @@ module.exports = (app) => {
           res.status(200).send()
         }
         db.close();
-      });
-    });
-  });
+      })
+    })
+  })
 
   app.post('/signin', (req,res) => {
     MongoClient.connect(url, function(err, db) {
@@ -80,7 +80,7 @@ module.exports = (app) => {
         res.send({msg:"ALL OK"})
     })  
     
-    app.delete('/users' , (req,res)=>{
+    app.delete('/users', (req,res)=>{
     
         MongoClient.connect(url, (err, db) => {
             if (err) throw err;

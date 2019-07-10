@@ -20,7 +20,7 @@ require('./routes/founddogs.js')(app)
 require('./routes/tinder.js')(app)
 require('./routes/blog.js')(app)
 require('./routes/users.js')(app)
-require('./routes/dogs.js')(app)
+require('./routes/pets.js')(app)
 
 
 
