@@ -21,6 +21,35 @@ module.exports = (app) => {
       });
     });
   });
+
+  app.post('/signin', (req,res) => {
+    MongoClient.connect(url, function(err, db) {
+      if (err) throw err;
+      var dbo = db.db("xuxo");
+      var query = { 
+        email: req.body.email
+        };
+      var myobj = { 
+          email: req.body.email,
+          password: req.body.password 
+      };
+      dbo.collection("Users").findOne(query, function(err, result) {
+        if(result === null){
+          dbo.collection("Users").insertOne(myobj, function(err, result) {
+            if (err) throw err;
+          
+            res.status(200).send("Usuario ingresado")
+          
+        })
+        } else {
+          res.status(404).send("Usuario existente")
+      }
+     
+      
+        db.close();
+      });
+    });
+  });
   
     app.get('/users', (req, res)=>{
         MongoClient.connect(url, { useNewUrlParser: true }, (err, db) =>{
@@ -34,23 +63,7 @@ module.exports = (app) => {
           });
     })
     
-    app.post('/users', (req, res) => {
-        MongoClient.connect(url, { useNewUrlParser: true }, (err, db) => {
-            if (err) throw err;
-            var dbo = db.db("Users");
-            var myobj = { 
-                            name: req.body.name,
-                            password: req.body.password 
-                        };
-            dbo.collection("Dogs").insertOne(myobj, (err, res) => {
-              if (err) throw err;
-              console.log("1 document inserted");
-             
-              db.close();
-            });
-          });
-          res.send({msg:"All ok"})
-    })
+    
     
     app.put('/users', (req,res)=>{
         MongoClient.connect(url, { useNewUrlParser: true } , function(err, db) {
@@ -67,13 +80,13 @@ module.exports = (app) => {
         res.send({msg:"ALL OK"})
     })  
     
-    app.delete('/dogs' , (req,res)=>{
+    app.delete('/users' , (req,res)=>{
     
         MongoClient.connect(url, (err, db) => {
             if (err) throw err;
             var dbo = db.db("xuxo");
             var myquery = { _id : ObjectId(req.body.id) };
-            dbo.collection("Dogs").deleteOne(myquery, function(err, obj) {
+            dbo.collection("Users").deleteOne(myquery, function(err, obj) {
               if (err) throw err;
               console.log("1 document deleted");
               db.close();
@@ -81,5 +94,7 @@ module.exports = (app) => {
           });
         res.send({msg:"ALL_OK"})
     })
+
+    
 }
 
