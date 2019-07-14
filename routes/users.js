@@ -8,7 +8,7 @@ module.exports = (app) => {
     MongoClient.connect(url, function(err, db) {
       if (err) throw err;
       var dbo = db.db("xuxo");
-      var query = { name: req.body.user, password: req.body.pass };
+      var query = { email: req.body.user, password: req.body.pass };
       dbo.collection("Users").findOne(query, function(err, result) {
         if (err) throw err;
         if(result === null){
@@ -22,6 +22,33 @@ module.exports = (app) => {
     });
   });
   
+  app.post('/register', (req,res)=>{
+    MongoClient.connect(url, { useNewUrlParser: true }, (err, db) => {
+      if (err) throw err;
+      let lookQuery = {email: req.body.form.email}
+      var dbo = db.db("xuxo");
+      dbo.collection("Users").findOne(lookQuery, function(err, result) {
+        if (err) throw err;
+        if(result === null){
+          var myobj = { 
+            email: req.body.form.email,
+            password: req.body.form.password 
+          };
+          dbo.collection("Users").insertOne(myobj, (err, res) => {
+            if (err) throw err;
+            console.log(`New user '${myobj.email}' has been created`);
+          })
+        }
+        else{
+          //En caso de que el usuario ya exista
+          console.log(`ERROR: User '${lookQuery.email}' already exists`);
+          res.status(404).send()
+        }
+        db.close();
+      });
+    })
+  })
+
     app.get('/users', (req, res)=>{
         MongoClient.connect(url, { useNewUrlParser: true }, (err, db) =>{
             if (err) throw err;
@@ -42,7 +69,7 @@ module.exports = (app) => {
                             name: req.body.name,
                             password: req.body.password 
                         };
-            dbo.collection("Dogs").insertOne(myobj, (err, res) => {
+            dbo.collection("Users").insertOne(myobj, (err, res) => {
               if (err) throw err;
               console.log("1 document inserted");
              
