@@ -15,20 +15,25 @@ module.exports = (app) => {
   app.use(formData.parse())
   
   app.post('/image-upload', (req, res) => {
+    
     console.log('Upload Images called')
     const values = Object.values(req.files)
-    let urlArray = []
+
     const promises = values.map(image => cloudinary.uploader.upload(image.path,
             function(error, result) {
                 console.log(`${image.path} has been uploaded as ${result.url}`)
-                urlArray.push(result.url)
+                res.json(result.url)
             }
         )
     )
-    res.status(200).send(urlArray)
-    Promise
-        .all(promises)
-        .then(results => res.json(results))
+    
+    res.header('Access-Control-Allow-Origin', req.headers.origin);
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, *');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    
+    Promise.all(promises)
+    
   })
 
 
