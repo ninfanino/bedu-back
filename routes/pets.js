@@ -33,8 +33,35 @@ module.exports = (app) => {
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     
     Promise.all(promises)
-    
   })
 
+  app.post('/save-pet', (req,res) => {
+    MongoClient.connect(url, { useNewUrlParser: true }, (err, db) => {
+      if (err) throw err;
+      console.log(req.body)
+      var myobj = { 
+        owner: req.body.user,
+        petname: req.body.petName,
+        age: req.body.petAge,
+        race: req.body.petRace,
+        certificate: req.body.petCertificate,
+        contactphone:req.body.petEmergency,
+        gender: req.body.petGender,
+        inadoption: req.body.petAdopt,
+        lost: req.body.petLost,
+        found: req.body.petFound,
+        inlove: req.body.petInLove,
+        picture: req.body.petURL
+      };
+      var dbo = db.db("xuxo");
+      dbo.collection("Pets").insertOne(myobj, (err, res) => {
+        if (err) throw err;
+        console.log(`New Pet '${myobj.petname}' has been created for '${myobj.owner}'`);
+      })
+      
+      db.close();
+     
+    })
+  })
 
 }
