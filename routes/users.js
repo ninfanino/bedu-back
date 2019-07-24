@@ -22,27 +22,29 @@ module.exports = (app) => {
     });
   });
   
-  app.post('/register', (req,res)=>{
+  app.post('/register', (req,response)=>{
     MongoClient.connect(url, { useNewUrlParser: true }, (err, db) => {
       if (err) throw err;
-      let lookQuery = {email: req.body.form.email}
+      let lookQuery = {email: req.body.email}
+      console.log(req.body)
       var dbo = db.db("xuxo");
       dbo.collection("Users").findOne(lookQuery, function(err, result) {
         if (err) throw err;
         if(result === null){
           var myobj = { 
-            email: req.body.form.email,
-            password: req.body.form.password 
+            email: req.body.email,
+            password: req.body.password 
           };
           dbo.collection("Users").insertOne(myobj, (err, res) => {
             if (err) throw err;
             console.log(`New user '${myobj.email}' has been created`);
+            response.status(200).send()
           })
         }
         else{
           //En caso de que el usuario ya exista
           console.log(`ERROR: User '${lookQuery.email}' already exists`);
-          res.status(404).send()
+          response.status(404).send()
         }
         db.close();
       });
