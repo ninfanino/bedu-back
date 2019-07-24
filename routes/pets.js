@@ -64,4 +64,41 @@ module.exports = (app) => {
     })
   })
 
+  app.get('/lovers', (req, res)=>{
+    // MongoClient.connect(url, { useNewUrlParser: true }, (err, db) =>{
+    //     if (err) throw err;
+    //     var dbo = db.db("xuxo");
+        
+    //     let lookQuery = {inlove: true}
+
+    //     dbo.collection("Pets").find(lookQuery, function(err, result) {
+    //       if (err) throw err;
+    //       if(result === null){
+    //         console.log(`ERROR: There´s no any dog which is looking for love`);
+    //         res.status(404).send()
+    //       }
+    //       else{
+    //         console.log('Dogs in Love found: ', result)
+    //         res.json(result)
+    //       }
+    //       db.close();
+    //   });
+    // })
+    MongoClient.connect(url, { useNewUrlParser: true }, (err, db) =>{
+      if (err) throw err;
+      var dbo = db.db("xuxo");
+      dbo.collection("Pets").find({inlove: true}).toArray(function(err, result) {
+        if (err) throw err;
+        resultado=result.map(dog =>({"name":  dog.petname,
+                                     "age": dog.age,
+                                     "race": dog.race,
+                                     "gender": dog.gender,
+                                     "picture": dog.picture}))
+        res.send(resultado)
+        console.log('Dogs in Love found: ', resultado)
+        db.close();
+      });
+    });
+  })
+
 }
