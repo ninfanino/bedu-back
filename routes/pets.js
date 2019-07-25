@@ -101,4 +101,23 @@ module.exports = (app) => {
     });
   })
 
+
+  app.get('/found', (req, res)=>{
+    MongoClient.connect(url, { useNewUrlParser: true }, (err, db) =>{
+      if (err) throw err;
+      var dbo = db.db("xuxo");
+      dbo.collection("Pets").find({found: true}).toArray(function(err, result) {
+        if (err) throw err;
+        resultado=result.map(dog =>({"name":  dog.petname,
+                                     "age": dog.age,
+                                     "race": dog.race,
+                                     "gender": dog.gender,
+                                     "picture": dog.picture}))
+        res.send(resultado)
+        console.log('Dogs found: ', resultado)
+        db.close();
+      });
+    });
+  })
+
 }
