@@ -90,6 +90,7 @@ module.exports = (app) => {
       dbo.collection("Pets").find({inlove: true}).toArray(function(err, result) {
         if (err) throw err;
         resultado=result.map(dog =>({"name":  dog.petname,
+                                     "owner": dog.owner,
                                      "age": dog.age,
                                      "race": dog.race,
                                      "gender": dog.gender,
