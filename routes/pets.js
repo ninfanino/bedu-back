@@ -111,6 +111,45 @@ module.exports = (app) => {
         if (err) throw err;
         resultado=result.map(dog =>({"name":  dog.petname,
                                      "age": dog.age,
+                                     "owner": dog.owner,
+                                     "race": dog.race,
+                                     "gender": dog.gender,
+                                     "picture": dog.picture}))
+        res.send(resultado)
+        console.log('Dogs found: ', resultado)
+        db.close();
+      });
+    });
+  })
+
+  app.get('/lost', (req, res)=>{
+    MongoClient.connect(url, { useNewUrlParser: true }, (err, db) =>{
+      if (err) throw err;
+      var dbo = db.db("xuxo");
+      dbo.collection("Pets").find({lost: true}).toArray(function(err, result) {
+        if (err) throw err;
+        resultado=result.map(dog =>({"name":  dog.petname,
+                                     "age": dog.age,
+                                     "owner": dog.owner,
+                                     "race": dog.race,
+                                     "gender": dog.gender,
+                                     "picture": dog.picture}))
+        res.send(resultado)
+        console.log('Dogs found: ', resultado)
+        db.close();
+      });
+    });
+  })
+
+  app.get('/adoption', (req, res)=>{
+    MongoClient.connect(url, { useNewUrlParser: true }, (err, db) =>{
+      if (err) throw err;
+      var dbo = db.db("xuxo");
+      dbo.collection("Pets").find({inadoption: true}).toArray(function(err, result) {
+        if (err) throw err;
+        resultado=result.map(dog =>({"name":  dog.petname,
+                                     "age": dog.age,
+                                     "owner": dog.owner,
                                      "race": dog.race,
                                      "gender": dog.gender,
                                      "picture": dog.picture}))
