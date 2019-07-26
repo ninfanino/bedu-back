@@ -12,6 +12,7 @@ module.exports = (app) => {
             like : req.body.like,
             mensaje : req.body.mensaje,
             destinatario : req.body.destinatario,
+            mascota: req.body.mascota,
             fecha: req.body.fecha
           };
           dbo.collection("Messages").insertOne(myobj, (err, res) => {
