@@ -102,6 +102,28 @@ module.exports = (app) => {
     });
   })
 
+  app.post('/registered-pets', (req, res)=>{
+    MongoClient.connect(url, { useNewUrlParser: true }, (err, db) =>{
+      if (err) throw err;
+      var dbo = db.db("xuxo");
+      console.log(`Registers from`, req.body.email)
+      let lookQuery = {owner: req.body.email}
+      
+      dbo.collection("Pets").find(lookQuery).toArray(function(err, result) {
+        if (err) throw err;
+        // resultado=result.map(dog =>({"name":  dog.petname,
+        //                              "owner": dog.owner,
+        //                              "age": dog.age,
+        //                              "race": dog.race,
+        //                              "gender": dog.gender,
+        //                              "picture": dog.picture}))
+        // res.send(resultado)
+        res.send(result)
+        console.log('Pets for ', req.body.email,' found: ', result)
+        db.close();
+      });
+    });
+  })
 
   app.get('/found', (req, res)=>{
     MongoClient.connect(url, { useNewUrlParser: true }, (err, db) =>{
