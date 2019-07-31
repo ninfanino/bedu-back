@@ -23,4 +23,40 @@ module.exports = (app) => {
         });
         res.send({msg:"Tu mensaje ha sido enviado"})
   })
+
+  app.post('/get-messages', (req,res)=>{
+    MongoClient.connect(url, { useNewUrlParser: true }, (err, db) => {
+      if (err) throw err;
+      var dbo = db.db("xuxo");
+      var myPostedMessages = {
+        remitente : req.body.email
+      };
+      var myReceivedMessages = {
+        destinatario : req.body.email
+      }
+      dbo.collection("Messages").aggregate([
+        {$match: {$or: [ myPostedMessages, myReceivedMessages ] }},
+        {
+          $lookup:
+            {
+              from: "Pets",
+              localField: "mascota",
+              foreignField: "petname",
+              as: "pet_info"
+            }
+        },
+        {$unwind: "$pet_info"}
+      ]).toArray(function(err, result) {
+          if (err) throw err;
+          resultado=result.map(message =>({"remitente": message.remitente,
+                                    "destinatario": message.destinatario,
+                                    "mensaje": message.mensaje,
+                                    "mascota": message.mascota,
+                                    "picture": message.pet_info.picture}))
+          res.send(resultado)
+          console.log('Informacion de mensajes encontrada con exito')
+          db.close();
+      })
+    })
+  })
 }
